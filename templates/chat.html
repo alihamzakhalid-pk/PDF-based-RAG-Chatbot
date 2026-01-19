@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Chatbot - Chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="chat-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="{{ url_for('index') }}" class="logo-link">
+                    <span class="logo-icon">🔮</span>
+                    <h2>RAG Chatbot</h2>
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <h3>Documents</h3>
+                <ul class="doc-list">
+                    {% for doc in documents %}
+                    <li class="doc-item">
+                        <span class="doc-icon">📄</span>
+                        <span class="doc-info">
+                            <span class="doc-name">{{ doc.filename }}</span>
+                            <span class="doc-meta">{{ doc.pages }} pages</span>
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="sidebar-actions">
+                <a href="{{ url_for('index') }}" class="btn btn-secondary btn-sm">➕ Add Docs</a>
+                <button class="btn btn-danger btn-sm" id="clearBtn">🗑️ Clear</button>
+            </div>
+        </aside>
+
+        <main class="chat-main">
+            <header class="chat-header">
+                <h1>💬 Document Q&A</h1>
+                <p>Ask questions about your documents</p>
+            </header>
+
+            <div class="chat-messages" id="chatMessages">
+                {% if chat_history %}
+                {% for entry in chat_history %}
+                <div class="message user-message">
+                    <div class="message-avatar">👤</div>
+                    <div class="message-content">
+                        <p>{{ entry.question }}</p>
+                    </div>
+                </div>
+                <div class="message assistant-message">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <p>{{ entry.answer }}</p>
+                        {% if entry.sources %}
+                        <div class="message-sources">
+                            <span class="sources-label">Sources:</span>
+                            {% for s in entry.sources %}<span class="source-tag">{{ s }}</span>{% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="chat-welcome">
+                    <div class="welcome-icon">🎯</div>
+                    <h2>Ready to Answer!</h2>
+                    <p>Your documents are processed. Ask any question.</p>
+                    <div class="sample-questions">
+                        <h4>Try:</h4>
+                        <button class="sample-q" data-question="What is the main topic?">What is the main
+                            topic?</button>
+                        <button class="sample-q" data-question="Summarize the key points">Summarize the key
+                            points</button>
+                        <button class="sample-q" data-question="What conclusions are mentioned?">What conclusions are
+                            mentioned?</button>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="chat-input-container">
+                <form id="chatForm" class="chat-form">
+                    <div class="input-wrapper">
+                        <input type="text" id="questionInput" placeholder="Ask about your documents..."
+                            autocomplete="off" required>
+                        <button type="submit" class="send-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13" />
+                                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+                <p class="input-hint">Press Enter to send</p>
+            </div>
+        </main>
+
+        <aside class="context-sidebar" id="contextSidebar">
+            <div class="context-header">
+                <h3>📋 Context</h3>
+                <button class="close-context" id="closeContext">✕</button>
+            </div>
+            <div class="context-content" id="contextContent">
+                <p class="context-placeholder">Context appears here after each question.</p>
+            </div>
+        </aside>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Generating...</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

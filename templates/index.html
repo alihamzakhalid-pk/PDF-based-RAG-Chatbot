@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Chatbot - Upload</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🔮</span>
+                <h1>RAG Chatbot</h1>
+            </div>
+            <p class="tagline">Upload PDF documents and get AI-powered answers</p>
+        </header>
+
+        <main class="main-content">
+            <section class="upload-section">
+                <div class="upload-card">
+                    <div class="upload-header">
+                        <h2>📄 Upload Documents</h2>
+                        <p>Drag and drop PDF files or click to browse</p>
+                    </div>
+
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="upload-area" id="dropZone">
+                            <div class="upload-icon">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                            </div>
+                            <p class="upload-text">Drop PDF files here</p>
+                            <p class="upload-subtext">or click to select</p>
+                            <input type="file" id="fileInput" name="files" multiple accept=".pdf" hidden>
+                        </div>
+
+                        <div class="selected-files" id="selectedFiles"></div>
+                        <button type="submit" class="btn btn-primary" id="uploadBtn" disabled>
+                            <span>🚀</span> Process Documents
+                        </button>
+                    </form>
+                    <div class="upload-status" id="uploadStatus"></div>
+                </div>
+            </section>
+
+            {% if documents %}
+            <section class="documents-section">
+                <div class="documents-card">
+                    <h3>📁 Your Documents</h3>
+                    <ul class="documents-list">
+                        {% for doc in documents %}
+                        <li class="document-item">
+                            <span class="doc-icon">📄</span>
+                            <span class="doc-name">{{ doc.filename }}</span>
+                            <span class="doc-pages">{{ doc.pages }} pages</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="document-actions">
+                        <a href="{{ url_for('chat') }}" class="btn btn-success">💬 Start Chatting</a>
+                        <button class="btn btn-danger" id="clearBtn">🗑️ Clear All</button>
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+
+            <section class="features-section">
+                <h3>How It Works</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📤</div>
+                        <h4>Upload</h4>
+                        <p>Add PDFs</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h4>Process</h4>
+                        <p>AI analyzes</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💬</div>
+                        <h4>Ask</h4>
+                        <p>Type questions</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">✨</div>
+                        <h4>Answer</h4>
+                        <p>Get responses</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Powered by LLaMA 3 • Flask & FAISS</p>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
